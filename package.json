@@ -1,0 +1,20 @@
+{
+  "name": "opencode-isolate",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "description": "OpenCode plugin: create a git worktree and switch the current session into it",
+  "author": "sakikuroe",
+  "license": "MIT",
+  "exports": {
+    ".": "./index.ts",
+    "./server": "./index.ts"
+  },
+  "oc-plugin": ["server"],
+  "dependencies": {
+    "@opencode-ai/plugin": "latest"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  }
+}
