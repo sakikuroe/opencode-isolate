@@ -1,11 +1,30 @@
 {
   "name": "opencode-isolate",
-  "version": "0.0.1",
-  "private": true,
+  "version": "0.1.0",
   "type": "module",
   "description": "OpenCode plugin: create a git worktree and switch the current session into it",
   "author": "sakikuroe",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sakikuroe/opencode-isolate.git"
+  },
+  "homepage": "https://github.com/sakikuroe/opencode-isolate#readme",
+  "bugs": {
+    "url": "https://github.com/sakikuroe/opencode-isolate/issues"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "git",
+    "worktree"
+  ],
+  "files": [
+    "index.ts",
+    "lib",
+    "tools",
+    "README.ja.md"
+  ],
   "exports": {
     ".": "./index.ts",
     "./server": "./index.ts"
