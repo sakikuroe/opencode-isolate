@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "opencode-worktree",
+      "name": "opencode-isolate",
       "dependencies": {
         "@opencode-ai/plugin": "latest",
       },

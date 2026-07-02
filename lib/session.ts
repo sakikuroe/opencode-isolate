@@ -1,5 +1,5 @@
 import { Database } from "bun:sqlite";
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { readFileSync } from "fs";
 import { homedir } from "os";
 import { join, resolve } from "path";
@@ -128,7 +128,7 @@ export function resolveProjectId(dir: string): string {
 
   // git コマンドで初期コミットハッシュを取得する
   try {
-    const id = execSync("git rev-list --max-parents=0 --all", {
+    const id = execFileSync("git", ["rev-list", "--max-parents=0", "--all"], {
       cwd: dir,
       encoding: "utf8",
       stdio: ["pipe", "pipe", "ignore"],
