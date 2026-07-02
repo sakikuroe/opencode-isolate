@@ -83,6 +83,16 @@ describe("createWorktree", () => {
     const second = await createWorktree(tmpDir, "feat-123");
     expect(second).toBe(first);
   });
+
+  // ブランチ名にシェルのメタ文字が含まれていてもコマンドとして実行されないことを確認。
+  // execFileSync はシェルを経由しないため、$(...) はコマンド置換されずただの文字列として扱われる。
+  test("does not execute shell metacharacters in the branch name", async () => {
+    const marker = join(tmpDir, "pwned");
+    // シェルを経由していれば pwned ファイルが作られてしまう危険なブランチ名。
+    // git 側の検証でエラーになること自体は問題なく、副作用が起きないことだけを確認する。
+    await createWorktree(tmpDir, `x$(touch ${marker})`).catch(() => {});
+    expect(existsSync(marker)).toBe(false);
+  });
 });
 
 // -----------------------------------------------------------------------

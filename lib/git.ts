@@ -1,4 +1,4 @@
-import { execSync } from "child_process";
+import { execFileSync } from "child_process";
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
 import { join } from "path";
 
@@ -23,24 +23,25 @@ export async function createWorktree(repoRoot: string, branch: string): Promise<
     // `git worktree list` に登録されているか確認する。
     // 登録済みなら正常なワークツリーなのでそのまま返す。
     // ディレクトリだけ残っていて登録されていない場合は壊れた状態なのでエラーにする。
-    const list = execSync(`git -C "${repoRoot}" worktree list`, { encoding: "utf8" });
+    const list = execFileSync("git", ["-C", repoRoot, "worktree", "list"], { encoding: "utf8" });
     if (!list.split("\n").some((line) => line.startsWith(worktreePath)))
       throw new Error(`${worktreePath} exists as a directory but is not registered as a git worktree.`);
     return worktreePath;
   }
 
   // 指定されたブランチが既にローカルに存在するか調べる
-  const branchExists = execSync(`git -C "${repoRoot}" branch --list "${branch}"`, {
-    encoding: "utf8",
-  }).trim().length > 0;
+  const branchExists =
+    execFileSync("git", ["-C", repoRoot, "branch", "--list", branch], {
+      encoding: "utf8",
+    }).trim().length > 0;
 
-  // 既存ブランチはそのままチェックアウト、新規ブランチは -b で作りながら作成
-  execSync(
-    branchExists
-      ? `git -C "${repoRoot}" worktree add "${worktreePath}" "${branch}"`
-      : `git -C "${repoRoot}" worktree add -b "${branch}" "${worktreePath}"`,
-    { encoding: "utf8" }
-  );
+  // 既存ブランチはそのままチェックアウト、新規ブランチは -b で作りながら作成。
+  // 引数を配列で渡すことでシェルを経由せず、ブランチ名に含まれる特殊文字が
+  // コマンドとして解釈されることを防ぐ。
+  const addArgs = branchExists
+    ? ["-C", repoRoot, "worktree", "add", worktreePath, branch]
+    : ["-C", repoRoot, "worktree", "add", "-b", branch, worktreePath];
+  execFileSync("git", addArgs, { encoding: "utf8" });
 
   return worktreePath;
 }
